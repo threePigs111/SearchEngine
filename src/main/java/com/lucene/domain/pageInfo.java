@@ -18,6 +18,17 @@ public class pageInfo {
                 '}';
     }
 
+    public pageInfo() {
+    }
+
+    public pageInfo(String title, String author, String url, String dayTime, String detail) {
+        this.title = title;
+        this.author = author;
+        this.url = url;
+        this.dayTime = dayTime;
+        Detail = detail;
+    }
+
     public String getTitle() {
         return title;
     }

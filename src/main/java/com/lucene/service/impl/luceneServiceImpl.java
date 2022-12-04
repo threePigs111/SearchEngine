@@ -20,16 +20,11 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.store.IOContext;
-import org.apache.lucene.store.IndexInput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,7 +64,7 @@ public class luceneServiceImpl implements luceneService {
     }
 
     @Override
-    public void search(String keyWords) throws IOException, ParseException {
+    public List<pageInfo> search(String keyWords) throws IOException, ParseException {
         Directory directory=FSDirectory.open(FileSystems.getDefault().getPath(luceneService.PATH));
         MyIKAnalyzer ikAnalyzer=new MyIKAnalyzer();
         IndexReader reader = DirectoryReader.open(directory);
@@ -78,15 +73,12 @@ public class luceneServiceImpl implements luceneService {
         Query query=parser.parse(keyWords);
         TopDocs topDocs=indexSearcher.search(query,10);
         ScoreDoc[] scoreDocs=topDocs.scoreDocs;
+        List<pageInfo> pageInfos=new ArrayList<>();
         for(ScoreDoc scoreDoc: scoreDocs)
         {
             Document document =indexSearcher.doc(scoreDoc.doc);
-            System.out.println("title  "+document.get("title"));
-            System.out.println("content  "+document.get("detail"));
-            System.out.println("url  "+document.get("url"));
-            System.out.println("daytime  "+document.get("dayTime"));
-            System.out.println("author  "+document.get("author"));
-            System.out.println("-----------------");
+            pageInfos.add(new pageInfo(document.get("title"),document.get("author"),document.get("url"),document.get("dayTime"),document.get("detail")));
         }
+        return pageInfos;
     }
 }

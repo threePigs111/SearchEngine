@@ -10,5 +10,5 @@ import java.util.List;
 public interface luceneService {
      String PATH="/indexDir";
     void createIndex() throws IOException;
-    void search(String keyWords) throws IOException, ParseException;
+    List<pageInfo> search(String keyWords) throws IOException, ParseException;
 }
