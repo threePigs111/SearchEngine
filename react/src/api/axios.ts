@@ -8,6 +8,7 @@ import axios from "axios";
  */
 export function myAxios(axiosConfig: any) {
   const service = axios.create({
+    headers: {"Access-Control-Allow-Origin": "*"},
     baseURL: import.meta.env.VITE_BASE_URL,
     timeout: 10000
   });
