@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @SpringBootApplication
 @EnableWebMvc
-public class LuceneApplication implements CommandLineRunner {
+public class LuceneApplication  {
 
     @Autowired
     luceneService luceneService;
@@ -22,10 +22,5 @@ public class LuceneApplication implements CommandLineRunner {
     }
 
 
-    @Override
-    public void run(String... args) throws Exception {
-          luceneService.createIndex();
-          luceneService.search("你和我");
-    }
 }
 
