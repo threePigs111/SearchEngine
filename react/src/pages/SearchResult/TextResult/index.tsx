@@ -1,14 +1,19 @@
-import { Layout, Space } from "antd";
+import { Divider, Layout, Pagination, Space } from "antd";
 import { useEffect, useState } from "react";
 import ResultItem from "../../../components/ResultItem";
 import "./index.css";
 import { getSearchResultAPI } from "../../../api/search";
 import SELoading from "../../../components/SELoading";
 import { ResultItemType } from "../../../types";
+import { config } from "../../../constants/config";
 const { Content } = Layout;
+
+const MAX_CAP = config.MAX_PAGE_CAP;
 
 type PropsType = {
   keyword: string;
+  page: number;
+  setPage: (page: number) => void;
 }
 
 /**
@@ -16,15 +21,18 @@ type PropsType = {
  * 
  * 请求搜索结果，并渲染一个搜索结果条目数组
  * 对后端返回速度慢做了加载动画
- * @param param0 
+ * @param keyword 关键词 
+ * @param page 当前页数
  * @returns 
  */
-export default function TextResult({ keyword } : PropsType) {
+export default function TextResult({ keyword, page, setPage } : PropsType) {
   // 搜索结果列表
-  const [resultList, setResultList] = useState<ResultItemType[]>();
+  const [resultList, setResultList] = useState<ResultItemType[]>([]);
 
   // 加载状态
   const [loading, setLoading] = useState(true);
+
+  console.log(Math.ceil(resultList?.length  / MAX_CAP));
 
   /**
    * 预处理结果列表
@@ -61,6 +69,11 @@ export default function TextResult({ keyword } : PropsType) {
     searchResult(keyword);
   }, []);
 
+  function onChange(page: number) {
+    document.querySelector(".result-content")?.scroll({ top: 0, left: 0 });
+    setPage(page);
+  }
+
   /**
    * 请求搜索结果
    * 
@@ -83,7 +96,8 @@ export default function TextResult({ keyword } : PropsType) {
           <div className="result-info">共找到 {resultList?.length} 条结果</div>
           <div className="result-list">
             {resultList
-              ?.map((item, index) => (
+              .slice((page - 1) * MAX_CAP, page * MAX_CAP)
+              .map((item, index) => (
                 <ResultItem
                   item={item}
                   key={index}
@@ -92,6 +106,8 @@ export default function TextResult({ keyword } : PropsType) {
               ))}
           </div>
         </Space>
+        <Divider />
+        <Pagination defaultCurrent={1} total={resultList.length} onChange={onChange}/>
       </Content>
     );
 }

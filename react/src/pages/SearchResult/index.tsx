@@ -1,4 +1,4 @@
-import { Divider, Layout, Menu } from "antd";
+import { Divider, Layout, Menu, Pagination } from "antd";
 import { useState } from "react";
 import SEFooter from "../../components/SEFooter";
 import SEHeader from "../../components/SEHeader";
@@ -17,6 +17,7 @@ export default function SearchResult() {
 
   const [searchParams] = useSearchParams();
   const [keyword, setKeyword] = useState(searchParams.get("word") || "");
+  const [page, setPage] = useState(1);
 
   return (
     <>
@@ -35,8 +36,9 @@ export default function SearchResult() {
           </Menu>
           <TextResult
             keyword={keyword}
+            page={page}
+            setPage={setPage}
           />
-          <Divider />
         </Content>
         <SEFooter />
       </Layout>

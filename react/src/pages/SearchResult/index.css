@@ -1,3 +1,7 @@
+.result-content {
+  padding-bottom: 20px;
+}
+
 @media screen and (min-width: 600px) {
   .result-content {
     padding-left: 180px;
